@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – TaskForge{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <a href="/tasks/new" class="btn btn-primary" data-testid="btn-new-task">+ New task</a>
+</div>
+
+<section aria-label="Task statistics" class="stats-grid" data-testid="stats-grid">
+  <div class="stat-card" data-testid="stat-total-open">
+    <span class="stat-value">{{ stats.total_open }}</span>
+    <span class="stat-label">Open tasks</span>
+  </div>
+  <div class="stat-card stat-card--progress" data-testid="stat-in-progress">
+    <span class="stat-value">{{ stats.in_progress }}</span>
+    <span class="stat-label">In progress</span>
+  </div>
+  <div class="stat-card stat-card--done" data-testid="stat-completed">
+    <span class="stat-value">{{ stats.completed }}</span>
+    <span class="stat-label">Completed</span>
+  </div>
+  <div class="stat-card stat-card--overdue" data-testid="stat-overdue">
+    <span class="stat-value">{{ stats.overdue }}</span>
+    <span class="stat-label">Overdue</span>
+  </div>
+</section>
+
+<section class="dashboard-actions">
+  <h2>Quick links</h2>
+  <ul>
+    <li><a href="/tasks?status_filter=in_progress">View in-progress tasks</a></li>
+    <li><a href="/tasks?status_filter=todo">View to-do tasks</a></li>
+    <li><a href="/tasks?assignee_id={{ current_user.id }}">My tasks</a></li>
+  </ul>
+</section>
+{% endblock %}

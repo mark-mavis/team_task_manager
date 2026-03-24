@@ -1,8 +1,32 @@
-colorama==0.4.6
-iniconfig==2.3.0
-packaging==25.0
-pluggy==1.5.0
-Pygments==2.19.2
+# Web framework
+fastapi==0.135.2
+uvicorn[standard]==0.42.0
+python-multipart==0.0.22
+starlette==1.0.0
+jinja2==3.1.6
+
+# Database
+sqlalchemy==2.0.48
+
+# Auth / security
+passlib[bcrypt]==1.7.4
+bcrypt==4.3.0          # passlib is not yet compatible with bcrypt>=5
+itsdangerous==2.2.0    # required by starlette SessionMiddleware
+
+# Config / validation
+pydantic==2.12.5
+pydantic-settings==2.13.1
+pydantic[email]==2.12.5
+email-validator==2.3.0
+
+# HTTP client (required by FastAPI TestClient)
+httpx==0.28.1
+
+# Testing
 pytest==9.0.2
-setuptools==80.10.2
-wheel==0.46.3
+pytest-cov==7.1.0
+anyio==4.12.1
+
+# End-to-end testing
+playwright==1.58.0
+pytest-playwright==0.7.2

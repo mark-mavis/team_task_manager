@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} – TaskForge{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 data-testid="task-detail-title">{{ task.title }}</h1>
+  <div class="header-actions">
+    {% if can_edit %}
+    <a href="/tasks/{{ task.id }}/edit" class="btn btn-secondary" data-testid="btn-edit-task">Edit</a>
+    {% endif %}
+    {% if can_delete %}
+    <form method="post" action="/tasks/{{ task.id }}/delete" style="display:inline"
+          onsubmit="return confirm('Delete this task? This cannot be undone.')">
+      <button type="submit" class="btn btn-danger" data-testid="btn-delete-task">Delete</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="detail-grid">
+  <section class="detail-card">
+    <h2>Details</h2>
+    <dl class="detail-list">
+      <dt>Status</dt>
+      <dd>
+        <span class="badge badge-status-{{ task.status }}" data-testid="detail-status">
+          {{ task.status | replace("_", " ") | title }}
+        </span>
+      </dd>
+
+      <dt>Priority</dt>
+      <dd>
+        <span class="badge badge-priority-{{ task.priority }}" data-testid="detail-priority">
+          {{ task.priority | title }}
+        </span>
+      </dd>
+
+      <dt>Assignee</dt>
+      <dd data-testid="detail-assignee">{{ task.assignee.username if task.assignee else "Unassigned" }}</dd>
+
+      <dt>Created by</dt>
+      <dd data-testid="detail-created-by">{{ task.created_by.username }}</dd>
+
+      <dt>Due date</dt>
+      <dd data-testid="detail-due-date">{{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "—" }}</dd>
+
+      <dt>Completed at</dt>
+      <dd data-testid="detail-completed-at">
+        {{ task.completed_at.strftime("%Y-%m-%d %H:%M") if task.completed_at else "—" }}
+      </dd>
+
+      <dt>Created</dt>
+      <dd>{{ task.created_at.strftime("%Y-%m-%d %H:%M") }}</dd>
+
+      <dt>Updated</dt>
+      <dd>{{ task.updated_at.strftime("%Y-%m-%d %H:%M") }}</dd>
+    </dl>
+  </section>
+
+  {% if task.description %}
+  <section class="detail-card">
+    <h2>Description</h2>
+    <p data-testid="detail-description">{{ task.description }}</p>
+  </section>
+  {% endif %}
+
+  {% if task.events %}
+  <section class="detail-card detail-card--full">
+    <h2>Audit trail</h2>
+    <table class="audit-table" aria-label="Task audit trail">
+      <thead>
+        <tr>
+          <th>When</th>
+          <th>By</th>
+          <th>Event</th>
+          <th>Field</th>
+          <th>From</th>
+          <th>To</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in task.events | sort(attribute='created_at', reverse=True) %}
+        <tr data-testid="audit-row">
+          <td>{{ event.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+          <td>{{ event.user.username }}</td>
+          <td>{{ event.event_type | replace("_", " ") | title }}</td>
+          <td>{{ event.field_name or "—" }}</td>
+          <td>{{ event.old_value or "—" }}</td>
+          <td>{{ event.new_value or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+</div>
+
+<a href="/tasks" class="back-link">&larr; Back to tasks</a>
+{% endblock %}

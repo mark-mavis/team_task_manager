@@ -1,11 +1,9 @@
 # Virtual environments
-venv/
 .venv/
+venv/
 env/
 .env/
 ENV/
-env.bak/
-venv.bak/
 
 # Python cache
 __pycache__/
@@ -19,12 +17,18 @@ build/
 *.egg-info/
 *.egg
 
-# pytest
+# Testing & coverage
 .pytest_cache/
-
-# mypy
+.coverage
+htmlcov/
 .mypy_cache/
 
-# IDE
-.vscode/
-.idea/
+# Environment variables (never commit secrets)
+.env
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# Playwright browser cache
+playwright/.local-browsers/

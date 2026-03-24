@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}TaskForge{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  {% if current_user %}
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="site-logo" href="/dashboard" aria-label="TaskForge home">TaskForge</a>
+      <nav aria-label="Main navigation">
+        <a href="/dashboard" {% if request.url.path == '/dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+        <a href="/tasks"     {% if request.url.path.startswith('/tasks') %}aria-current="page"{% endif %}>Tasks</a>
+      </nav>
+      <div class="header-user">
+        <span data-testid="current-username">{{ current_user.username }}</span>
+        <span class="badge badge-{{ current_user.role }}">{{ current_user.role }}</span>
+        <form method="post" action="/logout" style="display:inline">
+          <button type="submit" class="btn btn-sm btn-secondary" data-testid="logout-btn">Log out</button>
+        </form>
+      </div>
+    </div>
+  </header>
+  {% endif %}
+
+  <main class="main-content" id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>TaskForge &mdash; learning-focused demo app</p>
+  </footer>
+</body>
+</html>

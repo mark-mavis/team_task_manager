@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log in – TaskForge</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="auth-body">
+  <main class="auth-card" id="main-content">
+    <h1 class="auth-title">TaskForge</h1>
+    <p class="auth-subtitle">Sign in to your account</p>
+
+    {% if error %}
+    <div class="alert alert-error" role="alert" data-testid="login-error">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" action="/login" novalidate data-testid="login-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          required
+          autofocus
+          data-testid="input-username"
+        />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          data-testid="input-password"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" data-testid="btn-login">
+        Sign in
+      </button>
+    </form>
+
+    <p class="auth-hint">
+      Demo accounts: <code>admin / password123</code> &nbsp;|&nbsp; <code>alice / password123</code>
+    </p>
+  </main>
+</body>
+</html>

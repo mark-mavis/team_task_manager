@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}{% if task %}Edit task{% else %}New task{% endif %} – TaskForge{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>{% if task %}Edit task{% else %}New task{% endif %}</h1>
+</div>
+
+{% if error %}
+<div class="alert alert-error" role="alert" data-testid="form-error">{{ error }}</div>
+{% endif %}
+
+<form
+  method="post"
+  action="{% if task %}/tasks/{{ task.id }}/edit{% else %}/tasks/new{% endif %}"
+  class="task-form"
+  novalidate
+  data-testid="task-form"
+>
+  <div class="field">
+    <label for="title">Title <span aria-hidden="true">*</span></label>
+    <input
+      id="title"
+      name="title"
+      type="text"
+      required
+      value="{{ task.title if task else '' }}"
+      data-testid="input-title"
+    />
+  </div>
+
+  <div class="field">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      rows="4"
+      data-testid="input-description"
+    >{{ task.description if task and task.description else '' }}</textarea>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="task_status">Status</label>
+      <select id="task_status" name="task_status" data-testid="select-status">
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if task and task.status.value == s %}selected{% elif not task and s == 'todo' %}selected{% endif %}>
+          {{ s | replace("_", " ") | title }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="priority">Priority</label>
+      <select id="priority" name="priority" data-testid="select-priority">
+        {% for p in priorities %}
+        <option value="{{ p }}" {% if task and task.priority.value == p %}selected{% elif not task and p == 'medium' %}selected{% endif %}>
+          {{ p | title }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="due_date">Due date</label>
+      <input
+        id="due_date"
+        name="due_date"
+        type="date"
+        value="{{ task.due_date.strftime('%Y-%m-%d') if task and task.due_date else '' }}"
+        data-testid="input-due-date"
+      />
+    </div>
+
+    <div class="field">
+      <label for="assignee_id">Assignee</label>
+      <select id="assignee_id" name="assignee_id" data-testid="select-assignee">
+        <option value="">Unassigned</option>
+        {% for user in users %}
+        <option value="{{ user.id }}" {% if task and task.assignee_id == user.id %}selected{% endif %}>
+          {{ user.username }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary" data-testid="btn-submit-task">
+      {% if task %}Save changes{% else %}Create task{% endif %}
+    </button>
+    <a href="{% if task %}/tasks/{{ task.id }}{% else %}/tasks{% endif %}" class="btn btn-ghost">
+      Cancel
+    </a>
+  </div>
+</form>
+{% endblock %}

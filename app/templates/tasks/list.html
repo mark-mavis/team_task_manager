@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Tasks – TaskForge{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Tasks</h1>
+  <a href="/tasks/new" class="btn btn-primary" data-testid="btn-new-task">+ New task</a>
+</div>
+
+{# Filter bar #}
+<form method="get" action="/tasks" class="filter-bar" aria-label="Filter tasks" data-testid="filter-form">
+  <div class="filter-group">
+    <label for="filter-search" class="sr-only">Search by title</label>
+    <input
+      id="filter-search"
+      name="search"
+      type="search"
+      placeholder="Search title…"
+      value="{{ filters.search or '' }}"
+      data-testid="filter-search"
+    />
+  </div>
+
+  <div class="filter-group">
+    <label for="filter-status" class="sr-only">Filter by status</label>
+    <select id="filter-status" name="status_filter" data-testid="filter-status">
+      <option value="">All statuses</option>
+      {% for s in statuses %}
+      <option value="{{ s }}" {% if filters.status == s %}selected{% endif %}>{{ s | replace("_", " ") | title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="filter-priority" class="sr-only">Filter by priority</label>
+    <select id="filter-priority" name="priority" data-testid="filter-priority">
+      <option value="">All priorities</option>
+      {% for p in priorities %}
+      <option value="{{ p }}" {% if filters.priority == p %}selected{% endif %}>{{ p | title }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="filter-assignee" class="sr-only">Filter by assignee</label>
+    <select id="filter-assignee" name="assignee_id" data-testid="filter-assignee">
+      <option value="">All assignees</option>
+      {% for user in users %}
+      <option value="{{ user.id }}" {% if filters.assignee_id == user.id %}selected{% endif %}>{{ user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-secondary" data-testid="btn-filter-apply">Filter</button>
+  <a href="/tasks" class="btn btn-ghost" data-testid="btn-filter-clear">Clear</a>
+</form>
+
+{# Task table #}
+{% if tasks %}
+<table class="task-table" aria-label="Task list" data-testid="task-table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Status</th>
+      <th scope="col">Priority</th>
+      <th scope="col">Assignee</th>
+      <th scope="col">Due date</th>
+      <th scope="col"><span class="sr-only">Actions</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+    <tr data-testid="task-row" data-task-id="{{ task.id }}">
+      <td>
+        <a href="/tasks/{{ task.id }}" data-testid="task-title-link">{{ task.title }}</a>
+      </td>
+      <td>
+        <span class="badge badge-status-{{ task.status }}" data-testid="task-status">
+          {{ task.status | replace("_", " ") | title }}
+        </span>
+      </td>
+      <td>
+        <span class="badge badge-priority-{{ task.priority }}" data-testid="task-priority">
+          {{ task.priority | title }}
+        </span>
+      </td>
+      <td data-testid="task-assignee">
+        {{ task.assignee.username if task.assignee else "—" }}
+      </td>
+      <td data-testid="task-due-date">
+        {{ task.due_date.strftime("%Y-%m-%d") if task.due_date else "—" }}
+      </td>
+      <td class="actions">
+        <a href="/tasks/{{ task.id }}/edit" class="btn btn-sm btn-secondary" data-testid="btn-edit-task">Edit</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-state" data-testid="empty-state">No tasks found. <a href="/tasks/new">Create one?</a></p>
+{% endif %}
+{% endblock %}
