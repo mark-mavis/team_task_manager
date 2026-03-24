@@ -36,6 +36,12 @@
   --shadow:           0 1px 3px rgba(0,0,0,.4);
 }
 
+/* Buttons with light backgrounds must keep dark text in dark mode */
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .btn-secondary:hover { color: #111827; }
+[data-theme="dark"] .btn-ghost           { color: #6b7280; }
+[data-theme="dark"] .btn-ghost:hover     { color: #111827; }
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 1rem;
