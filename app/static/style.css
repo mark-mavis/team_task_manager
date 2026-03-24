@@ -21,6 +21,21 @@
   --shadow:           0 1px 3px rgba(0,0,0,.12);
 }
 
+/* Dark mode – redefines every custom property so all components flip automatically */
+[data-theme="dark"] {
+  --color-bg:         #111827;
+  --color-surface:    #1f2937;
+  --color-border:     #374151;
+  --color-text:       #f9fafb;
+  --color-text-muted: #9ca3af;
+  --color-primary:    #60a5fa;
+  --color-primary-dk: #3b82f6;
+  --color-danger:     #f87171;
+  --color-success:    #34d399;
+  --color-warning:    #fbbf24;
+  --shadow:           0 1px 3px rgba(0,0,0,.4);
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 1rem;
@@ -69,6 +84,13 @@ a:hover { text-decoration: underline; }
 }
 
 .header-user { margin-left: auto; display: flex; align-items: center; gap: .75rem; font-size: .875rem; }
+
+.theme-toggle {
+  background: none; border: 1px solid var(--color-border); border-radius: var(--radius);
+  padding: .25rem .5rem; cursor: pointer; font-size: 1rem; line-height: 1;
+  color: var(--color-text-muted); transition: border-color .15s, color .15s;
+}
+.theme-toggle:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
 /* ── Main & Footer ───────────────────────────────────────── */
 .main-content { flex: 1; max-width: 1100px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
