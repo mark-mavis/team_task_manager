@@ -3,7 +3,7 @@ from typing import AsyncGenerator
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import HTTPException
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -37,10 +37,10 @@ app.include_router(tasks.router)
 
 
 @app.exception_handler(HTTPException)
-async def http_exception_handler(_request: Request, exc: HTTPException) -> RedirectResponse:
+async def http_exception_handler(_request: Request, exc: HTTPException) -> JSONResponse | RedirectResponse:
     if exc.status_code == 401:
-        return RedirectResponse(url="/login")
-    raise exc
+        return RedirectResponse(url="/login", status_code=302)
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
 
 @app.get("/")
