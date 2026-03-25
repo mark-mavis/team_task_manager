@@ -132,12 +132,14 @@ def get_dashboard_stats(db: Session) -> dict:
     """Return counts for the dashboard summary cards."""
     now = datetime.now(timezone.utc).date()
 
-    total_open = db.query(Task).filter(Task.status != TaskStatus.done).count()
-    in_progress = db.query(Task).filter(Task.status == TaskStatus.in_progress).count()
-    completed = db.query(Task).filter(Task.status == TaskStatus.done).count()
+    open_statuses = [TaskStatus.todo.value, TaskStatus.in_progress.value]
+
+    total_open = db.query(Task).filter(Task.status.in_(open_statuses)).count()
+    in_progress = db.query(Task).filter(Task.status == TaskStatus.in_progress.value).count()
+    completed = db.query(Task).filter(Task.status == TaskStatus.done.value).count()
     overdue = (
         db.query(Task)
-        .filter(Task.status != TaskStatus.done, Task.due_date < now)
+        .filter(Task.status.in_(open_statuses), Task.due_date < now)
         .count()
     )
 
