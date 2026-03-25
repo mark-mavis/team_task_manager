@@ -30,15 +30,16 @@ async def task_list(
     request: Request,
     status_filter: Optional[str] = None,
     priority: Optional[str] = None,
-    assignee_id: Optional[int] = None,
+    assignee_id: Optional[str] = None,
     search: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> HTMLResponse:
+    parsed_assignee_id = int(assignee_id) if assignee_id else None
     filters = TaskFilters(
         status=TaskStatus(status_filter) if status_filter else None,
         priority=TaskPriority(priority) if priority else None,
-        assignee_id=assignee_id,
+        assignee_id=parsed_assignee_id,
         search=search,
     )
     tasks = list_tasks(db, filters)
@@ -53,7 +54,7 @@ async def task_list(
             "filters": {
                 "status": status_filter,
                 "priority": priority,
-                "assignee_id": assignee_id,
+                "assignee_id": parsed_assignee_id,
                 "search": search,
             },
             "statuses": [s.value for s in TaskStatus],
