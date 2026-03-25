@@ -96,8 +96,8 @@ def update_task(db: Session, task: Task, data: TaskUpdate, updated_by: User) -> 
         _record_event(
             db, task, updated_by, event_type,
             field_name=field,
-            old_value=str(old_value) if old_value is not None else None,
-            new_value=str(new_value) if new_value is not None else None,
+            old_value=_to_audit_str(old_value),
+            new_value=_to_audit_str(new_value),
         )
 
         setattr(task, field, new_value)
@@ -152,6 +152,22 @@ def get_dashboard_stats(db: Session) -> dict:
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+import enum as _enum
+
+
+def _to_audit_str(value: object) -> Optional[str]:
+    """Convert a field value to a human-readable audit string.
+
+    Enum members expose their .value (e.g. 'in_progress') rather than
+    the Python repr ('TaskStatus.in_progress').
+    """
+    if value is None:
+        return None
+    if isinstance(value, _enum.Enum):
+        return str(value.value)
+    return str(value)
+
 
 def _record_event(
     db: Session,
